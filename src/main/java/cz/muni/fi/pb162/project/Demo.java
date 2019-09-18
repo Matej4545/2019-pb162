@@ -4,7 +4,7 @@ package cz.muni.fi.pb162.project;
 /**
  * Class for running main method.
  *
- * @author TODO: put your name here
+ * @author Matej Groman
  */
 public class Demo {
 
@@ -16,6 +16,5 @@ public class Demo {
     public static void main(String[] args) {
 
         System.out.println("Hello world!");
-
     }
 }
