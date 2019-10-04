@@ -1,5 +1,6 @@
 package cz.muni.fi.pb162.project.geometry;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 /**
@@ -44,7 +45,9 @@ public class Vertex2D {
      */
     @Override
     public String toString() {
-        return String.format(Locale.ROOT,"[%.1f, %.1f]", x, y);
+        String sX = new DecimalFormat("########0.0########").format(x).replaceAll(",", ".");
+        String sY = new DecimalFormat("########0.0########").format(y).replaceAll(",", ".");
+        return String.format("[%s, %s]", sX, sY);
     }
 
     /**
