@@ -12,6 +12,11 @@ public class Vertex2D {
     private double x;
     private double y;
 
+    /**
+     * Constructor for vertex
+     * @param x value on x-axis
+     * @param y value on y-axis
+     */
     public Vertex2D(double x, double y) {
         this.x = x;
         this.y = y;
@@ -44,6 +49,7 @@ public class Vertex2D {
 
     /**
      * Sums the X and Y coordinates
+     * @param otherVertex - the second vertex to determine middle
      * @return sum of the two coordinates
      */
      public Vertex2D createMiddle(Vertex2D otherVertex) {

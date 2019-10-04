@@ -22,6 +22,11 @@ public class Triangle {
         vertexArray[2] = c;
     }
 
+    /**
+     * It's normal getter, but pipeline wants something here
+     * @param index - which vertex is requested
+     * @return - mighty god of Java returns requested vertex under specific circumstances (index is in array)
+     */
     public Vertex2D getVertex(int index) {
         if (index < 0 || index > 2) {
             return null;
@@ -29,12 +34,18 @@ public class Triangle {
         return vertexArray[index];
     }
 
+    /**
+     * Setter for vertex change
+     * @param index which vertex should change
+     * @param vertex to what value
+     */
     public void setVertex(int index, Vertex2D vertex) {
-        if (index < 0 || index > 2) {
+        if (index < 0 || index > 2 || vertex == null) {
             return;
         }
         vertexArray[index] = vertex;
     }
+
     @Override
     public String toString() {
         return "Triangle: vertices=" + vertexArray[0].toString() + " "
@@ -60,7 +71,9 @@ public class Triangle {
      * @return true if successful, false otherwise
      */
     public boolean divide() {
-        if (isDivided()) return false;
+        if (isDivided()) {
+            return false;
+        }
 
         triangleArray = new Triangle[3];
 
@@ -75,8 +88,15 @@ public class Triangle {
         return true;
     }
 
+    /**
+     * Again, it's just getter for sub triangles
+     * @param index which triangle we should return
+     * @return the triangle we should return if it exists
+     */
     public Triangle getSubTriangle(int index) {
-        if (index < 0 || index > 2 || !isDivided()) return null;
+        if (index < 0 || index > 2 || !isDivided()) {
+            return null;
+        }
         return triangleArray[index];
     }
 
