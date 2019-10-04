@@ -9,9 +9,13 @@ import java.util.Locale;
  * It takes 0 params as we are not supposed to use constructor
  */
 public class Vertex2D {
-    private double x = 0.0;
-    private double y = 0.0;
+    private double x;
+    private double y;
 
+    public Vertex2D(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public double getX() {
         return x;
@@ -33,7 +37,8 @@ public class Vertex2D {
      * Returns information about vertex position
      * @return string representation of vertex position
      */
-    public String getInfo() {
+    @Override
+    public String toString() {
         return String.format(Locale.ROOT,"[%.1f, %.1f]", x, y);
     }
 
@@ -41,16 +46,9 @@ public class Vertex2D {
      * Sums the X and Y coordinates
      * @return sum of the two coordinates
      */
-    public double sumCoordinates() {
-        return x + y;
-    }
-
-    /**
-     * Moves vertex by values of another one
-     * @param vertex vertex by which coordinates will this one move
-     */
-    public void move(Vertex2D vertex) {
-        this.x += vertex.getX();
-        this.y += vertex.getY();
-    }
+     public Vertex2D createMiddle(Vertex2D otherVertex) {
+         double midX = (this.x + otherVertex.x) /2;
+         double midY = (this.y + otherVertex.y) /2;
+         return new Vertex2D(midX, midY);
+     }
 }
