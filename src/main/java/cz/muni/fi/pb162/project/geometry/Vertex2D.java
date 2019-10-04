@@ -1,7 +1,6 @@
 package cz.muni.fi.pb162.project.geometry;
 
 import java.text.DecimalFormat;
-import java.util.Locale;
 
 /**
  * @author Matej Groman
