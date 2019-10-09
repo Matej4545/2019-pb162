@@ -1,5 +1,9 @@
 package cz.muni.fi.pb162.project.geometry;
 
+/**
+ * Class representing Circle
+ * @author Matej Groman
+ */
 public class Circle {
     private final Vertex2D center;
     private final double radius;
