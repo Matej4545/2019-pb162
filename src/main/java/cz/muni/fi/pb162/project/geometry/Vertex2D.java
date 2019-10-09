@@ -61,7 +61,7 @@ public class Vertex2D {
          if (vertex == null) {
              return -1.0;
          }
-         double partialRes = Math.pow(Math.abs(vertex.getX() - this.x),2) + Math.pow(Math.abs(vertex.getY() - this.y),2);
-         return Math.sqrt(partialRes);
+         double partRes = Math.pow(Math.abs(vertex.getX() - this.x),2) + Math.pow(Math.abs(vertex.getY() - this.y),2);
+         return Math.sqrt(partRes);
      }
 }

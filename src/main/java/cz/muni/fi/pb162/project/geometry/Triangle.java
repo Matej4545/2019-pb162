@@ -120,11 +120,13 @@ public class Triangle {
      * @return T if it is, F otherwise
      */
     public boolean isEquilateral() {
-        return isEqualByThreshold(vertexArray[0].distance(vertexArray[1]), vertexArray[1].distance(vertexArray[2]), vertexArray[2].distance(vertexArray[0]));
+        return isEqualByThreshold(vertexArray[0].distance(vertexArray[1]), vertexArray[1].distance(vertexArray[2]),
+                vertexArray[2].distance(vertexArray[0]));
     }
 
     /**
-     * Helper function to decide if all three sides (using transitivity) are equal (with threshold TRIANGLE_LENGTH_THRESHOLD)
+     * Helper function to decide if all three sides (using transitivity) are equal
+     * (with threshold TRIANGLE_LENGTH_THRESHOLD)
      * @param d1 side a
      * @param d2 side b
      * @param d3 side c
