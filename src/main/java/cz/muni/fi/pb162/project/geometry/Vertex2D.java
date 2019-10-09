@@ -9,8 +9,8 @@ import java.text.DecimalFormat;
  * It takes 0 params as we are not supposed to use constructor
  */
 public class Vertex2D {
-    private double x;
-    private double y;
+    private final double x;
+    private final double y;
 
     /**
      * Constructor for vertex
@@ -26,16 +26,8 @@ public class Vertex2D {
         return x;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
     public double getY() {
         return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
     }
 
     /**
@@ -58,5 +50,18 @@ public class Vertex2D {
          double midX = (this.x + otherVertex.x) /2;
          double midY = (this.y + otherVertex.y) /2;
          return new Vertex2D(midX, midY);
+     }
+
+    /**
+     * Function to get eucliedan distance.
+      * @param vertex Other 2D vertex
+     * @return euciledan distance of the two vectors
+     */
+     double distance(Vertex2D vertex) {
+         if (vertex == null) {
+             return -1.0;
+         }
+         double partialRes = Math.pow(Math.abs(vertex.getX() - this.x),2) + Math.pow(Math.abs(vertex.getY() - this.y),2);
+         return Math.sqrt(partialRes);
      }
 }
