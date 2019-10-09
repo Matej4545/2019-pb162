@@ -22,7 +22,7 @@ public class Circle {
      * Nonparametric constructor creates default circle via other constructor
      */
     public Circle() {
-        this(new Vertex2D(0.0, 0.0), 0.0);
+        this(new Vertex2D(0.0, 0.0), 1.0);
     }
 
      public double getRadius() {
