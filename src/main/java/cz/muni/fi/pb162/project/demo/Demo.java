@@ -1,6 +1,7 @@
-package cz.muni.fi.pb162.project;
+package cz.muni.fi.pb162.project.demo;
 
 
+import cz.muni.fi.pb162.project.geometry.Triangle;
 import cz.muni.fi.pb162.project.geometry.Vertex2D;
 
 /**
@@ -16,18 +17,8 @@ public class Demo {
      * @param args command line arguments, will be ignored
      */
     public static void main(String[] args) {
-        Vertex2D v1 = new Vertex2D();
-        Vertex2D v2 = new Vertex2D();
 
-        v1.setX(2);
-        v1.setY(3);
-
-        v2.setX(1);
-        v2.setY(1);
-
-        v1.move(v2);
-
-        System.out.println(v1.getInfo());
-        System.out.println(v2.getInfo());
+        Triangle t = new Triangle(new Vertex2D(-100,0), new Vertex2D(0,100), new Vertex2D(100,-100));
+        System.out.println(t.toString());
     }
 }
