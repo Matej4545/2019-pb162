@@ -7,7 +7,7 @@ import cz.muni.fi.pb162.project.utils.SimpleMath;
  * @author Matej Groman
  */
 
-public class Triangle {
+public class Triangle implements Measurable {
     private static final double TRIANGLE_LENGTH_THRESHOLD = 0.001;
     private final Vertex2D[] vertexArray;
     private final Triangle[] triangleArray;
@@ -136,5 +136,21 @@ public class Triangle {
      */
     private boolean isEqualByThreshold(double d1, double d2, double d3) {
         return Math.abs(d1 - d2) < TRIANGLE_LENGTH_THRESHOLD && Math.abs(d2 - d3) < TRIANGLE_LENGTH_THRESHOLD;
+    }
+
+    /**
+     * Implements abstract function
+     * @return width of the triangle
+     */
+    public double getWidth() {
+        return SimpleMath.maxX(this) - SimpleMath.minX(this);
+    }
+
+    /**
+     * Implements abstract function
+     * @return height of the triangle
+     */
+    public double getHeight() {
+        return SimpleMath.maxY(this) - SimpleMath.minY(this);
     }
 }
