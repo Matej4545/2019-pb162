@@ -1,11 +1,13 @@
 package cz.muni.fi.pb162.project.geometry;
 
+import cz.muni.fi.pb162.project.utils.SimpleMath;
+
 /**
  * Class representing triangle, implementing basic trigonometry functions
  * @author Matej Groman
  */
 
-public class Triangle {
+public class Triangle implements Measurable {
     private Vertex2D[] vertexArray;
     private Triangle[] triangleArray;
 
@@ -98,6 +100,14 @@ public class Triangle {
             return null;
         }
         return triangleArray[index];
+    }
+
+    public double getWidth() {
+        return SimpleMath.maxX(this) - SimpleMath.minX(this);
+    }
+
+    public double getHeight() {
+        return SimpleMath.maxY(this) - SimpleMath.minY(this);
     }
 
 }
