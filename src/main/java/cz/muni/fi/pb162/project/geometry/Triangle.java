@@ -6,8 +6,9 @@ package cz.muni.fi.pb162.project.geometry;
  */
 
 public class Triangle {
-    private Vertex2D[] vertexArray;
-    private Triangle[] triangleArray;
+    private static final double TRIANGLE_LENGTH_THRESHOLD = 0.001;
+    private final Vertex2D[] vertexArray;
+    private final Triangle[] triangleArray;
 
     /**
      * Creates triangle object from Vertexes
@@ -17,9 +18,23 @@ public class Triangle {
      */
     public Triangle(Vertex2D a, Vertex2D b, Vertex2D c) {
         vertexArray = new Vertex2D[3];
+        triangleArray = new Triangle[3];
+
         vertexArray[0] = a;
         vertexArray[1] = b;
         vertexArray[2] = c;
+    }
+
+    /**
+     * Creates Sierpinsky triangle with defined depth
+     * @param a vert A
+     * @param b vert B
+     * @param c vert C
+     * @param depth depth of recursion
+     */
+    public Triangle(Vertex2D a, Vertex2D b, Vertex2D c, int depth) {
+        this(a, b, c);
+        divide(depth);
     }
 
     /**
@@ -34,18 +49,6 @@ public class Triangle {
         return vertexArray[index];
     }
 
-    /**
-     * Setter for vertex change
-     * @param index which vertex should change
-     * @param vertex to what value
-     */
-    public void setVertex(int index, Vertex2D vertex) {
-        if (index < 0 || index > 2 || vertex == null) {
-            return;
-        }
-        vertexArray[index] = vertex;
-    }
-
     @Override
     public String toString() {
         return "Triangle: vertices=" + vertexArray[0].toString() + " "
@@ -57,7 +60,7 @@ public class Triangle {
      * @return boolean - if split: true, false otherwise
      */
     public boolean isDivided() {
-        return triangleArray != null;
+        return triangleArray[0] != null;
     }
 
     /**
@@ -75,8 +78,6 @@ public class Triangle {
             return false;
         }
 
-        triangleArray = new Triangle[3];
-
         Vertex2D m1 = vertexArray[0].createMiddle(vertexArray[1]);
         Vertex2D m2 = vertexArray[1].createMiddle(vertexArray[2]);
         Vertex2D m3 = vertexArray[2].createMiddle(vertexArray[0]);
@@ -86,6 +87,20 @@ public class Triangle {
         triangleArray[2] = new Triangle(m3, m2, vertexArray[2] );
 
         return true;
+    }
+
+    /**
+     * Function recursively divides triangle while depth > 0
+     * @param depth
+     */
+    void divide(int depth) {
+        if (depth <= 0) {
+            return;
+        }
+        this.divide();
+        for (Triangle t : triangleArray) {
+            t.divide(depth-1);
+        }
     }
 
     /**
@@ -100,4 +115,24 @@ public class Triangle {
         return triangleArray[index];
     }
 
+    /**
+     * Function to determine if triangle is equilateral
+     * @return T if it is, F otherwise
+     */
+    public boolean isEquilateral() {
+        return isEqualByThreshold(vertexArray[0].distance(vertexArray[1]), vertexArray[1].distance(vertexArray[2]),
+                vertexArray[2].distance(vertexArray[0]));
+    }
+
+    /**
+     * Helper function to decide if all three sides (using transitivity) are equal
+     * (with threshold TRIANGLE_LENGTH_THRESHOLD)
+     * @param d1 side a
+     * @param d2 side b
+     * @param d3 side c
+     * @return T if sides are equal with threshold, F otherwise
+     */
+    private boolean isEqualByThreshold(double d1, double d2, double d3) {
+        return Math.abs(d1 - d2) < TRIANGLE_LENGTH_THRESHOLD && Math.abs(d2 - d3) < TRIANGLE_LENGTH_THRESHOLD;
+    }
 }
