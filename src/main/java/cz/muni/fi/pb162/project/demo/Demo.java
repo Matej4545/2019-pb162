@@ -2,7 +2,6 @@ package cz.muni.fi.pb162.project.demo;
 
 
 import cz.muni.fi.pb162.project.geometry.Square;
-import cz.muni.fi.pb162.project.geometry.Triangle;
 import cz.muni.fi.pb162.project.geometry.Vertex2D;
 
 /**

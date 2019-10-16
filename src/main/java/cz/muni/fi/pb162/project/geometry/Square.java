@@ -1,7 +1,5 @@
 package cz.muni.fi.pb162.project.geometry;
 
-import cz.muni.fi.pb162.project.utils.SimpleMath;
-
 /**
  * Class representing square
  * @author Matej Groman
