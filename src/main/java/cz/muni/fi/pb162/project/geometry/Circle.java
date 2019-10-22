@@ -4,7 +4,7 @@ package cz.muni.fi.pb162.project.geometry;
  * Class representing Circle
  * @author Matej Groman
  */
-public class Circle {
+public class Circle implements Measurable, Circular {
     private final Vertex2D center;
     private final double radius;
 
@@ -25,16 +25,25 @@ public class Circle {
         this(new Vertex2D(0.0, 0.0), 1.0);
     }
 
+    @Override
      public double getRadius() {
         return radius;
      }
-
+    @Override
      public Vertex2D getCenter() {
         return center;
      }
 
-     @Override
-    public String toString() {
+    @Override
+     public String toString() {
         return "Circle: center=" + center.toString() + ", radius=" + radius;
+     }
+
+     public double getWidth() {
+        return radius*2;
+     }
+
+     public double getHeight() {
+        return getWidth();
      }
 }
