@@ -6,7 +6,6 @@ package cz.muni.fi.pb162.project.geometry;
  */
 public class GeneralRegularPolygon implements RegularPolygon, Colored {
 
-    private Vertex2D[] vertexArray;
     private Vertex2D center;
     private double radius;
     private int sideCount;
