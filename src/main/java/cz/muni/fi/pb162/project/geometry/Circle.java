@@ -4,46 +4,35 @@ package cz.muni.fi.pb162.project.geometry;
  * Class representing Circle
  * @author Matej Groman
  */
-public class Circle implements Measurable, Circular {
-    private final Vertex2D center;
-    private final double radius;
-
+public class Circle extends GeneralRegularPolygon implements Measurable, Circular {
     /**
      * Constructor to create circle from parameters
      * @param center center of circle
      * @param radius circle radius
      */
     public Circle (Vertex2D center, double radius) {
-        this.center = center;
-        this.radius = radius;
+        super(center, Integer.MAX_VALUE, radius);
+        this.setColor(Color.RED);
     }
 
     /**
-     * Nonparametric constructor creates default circle via other constructor
+     * Nonparametric constructor with default values
      */
     public Circle() {
-        this(new Vertex2D(0.0, 0.0), 1.0);
+        super(new Vertex2D(0,0), Integer.MAX_VALUE, 1);
     }
 
     @Override
-     public double getRadius() {
-        return radius;
-     }
+    public String toString() {
+        return "Circle: center=" + super.getCenter().toString() + ", radius=" + super.getRadius();
+    }
+
+    /**
+     * Overrided function in GeneralRegularPolygon, because circle should have side length of 0
+     * @return 0
+     */
     @Override
-     public Vertex2D getCenter() {
-        return center;
-     }
-
-    @Override
-     public String toString() {
-        return "Circle: center=" + center.toString() + ", radius=" + radius;
-     }
-
-     public double getWidth() {
-        return radius*2;
-     }
-
-     public double getHeight() {
-        return getWidth();
-     }
+    public double getEdgeLength() {
+        return 0;
+    }
 }
