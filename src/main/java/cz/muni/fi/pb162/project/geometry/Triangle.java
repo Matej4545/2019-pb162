@@ -1,30 +1,23 @@
 package cz.muni.fi.pb162.project.geometry;
 
-import cz.muni.fi.pb162.project.utils.SimpleMath;
-
 /**
  * Class representing triangle, implementing basic trigonometry functions
  * @author Matej Groman
  */
 
-public class Triangle implements Measurable {
+public class Triangle extends ArrayPolygon implements Measurable {
     private static final double TRIANGLE_LENGTH_THRESHOLD = 0.001;
-    private final Vertex2D[] vertexArray;
     private final Triangle[] triangleArray;
 
     /**
-     * Creates triangle object from Vertexes
+     * Creates polygon object from Vertexes
      * @param a vert A
      * @param b vert B
      * @param c vert C
      */
     public Triangle(Vertex2D a, Vertex2D b, Vertex2D c) {
-        vertexArray = new Vertex2D[3];
+        super(new Vertex2D[] {a,b,c});
         triangleArray = new Triangle[3];
-
-        vertexArray[0] = a;
-        vertexArray[1] = b;
-        vertexArray[2] = c;
     }
 
     /**
@@ -39,22 +32,10 @@ public class Triangle implements Measurable {
         divide(depth);
     }
 
-    /**
-     * It's normal getter, but pipeline wants something here
-     * @param index - which vertex is requested
-     * @return - mighty god of Java returns requested vertex under specific circumstances (index is in array)
-     */
-    public Vertex2D getVertex(int index) {
-        if (index < 0 || index > 2) {
-            return null;
-        }
-        return vertexArray[index];
-    }
-
     @Override
     public String toString() {
-        return "Triangle: vertices=" + vertexArray[0].toString() + " "
-        + vertexArray[1].toString() + " " + vertexArray[2].toString();
+        return "Triangle: vertices=" + super.getVertex(0).toString() + " "
+        + super.getVertex(1).toString() + " " + super.getVertex(2).toString();
     }
 
     /**
@@ -80,13 +61,13 @@ public class Triangle implements Measurable {
             return false;
         }
 
-        Vertex2D m1 = vertexArray[0].createMiddle(vertexArray[1]);
-        Vertex2D m2 = vertexArray[1].createMiddle(vertexArray[2]);
-        Vertex2D m3 = vertexArray[2].createMiddle(vertexArray[0]);
+        Vertex2D m1 = super.getVertex(0).createMiddle(super.getVertex(1));
+        Vertex2D m2 = super.getVertex(1).createMiddle(super.getVertex(2));
+        Vertex2D m3 = super.getVertex(2).createMiddle(super.getVertex(0));
 
-        triangleArray[0] = new Triangle(vertexArray[0], m1, m3 );
-        triangleArray[1] = new Triangle(m1, vertexArray[1], m2 );
-        triangleArray[2] = new Triangle(m3, m2, vertexArray[2] );
+        triangleArray[0] = new Triangle(super.getVertex(0), m1, m3 );
+        triangleArray[1] = new Triangle(m1, super.getVertex(1), m2 );
+        triangleArray[2] = new Triangle(m3, m2, super.getVertex(2) );
 
         return true;
     }
@@ -122,8 +103,9 @@ public class Triangle implements Measurable {
      * @return T if it is, F otherwise
      */
     public boolean isEquilateral() {
-        return isEqualByThreshold(vertexArray[0].distance(vertexArray[1]), vertexArray[1].distance(vertexArray[2]),
-                vertexArray[2].distance(vertexArray[0]));
+        return isEqualByThreshold(super.getVertex(0).distance(super.getVertex(1)),
+                super.getVertex(1).distance(super.getVertex(2)),
+                super.getVertex(2).distance(super.getVertex(0)));
     }
 
     /**
@@ -136,21 +118,5 @@ public class Triangle implements Measurable {
      */
     private boolean isEqualByThreshold(double d1, double d2, double d3) {
         return Math.abs(d1 - d2) < TRIANGLE_LENGTH_THRESHOLD && Math.abs(d2 - d3) < TRIANGLE_LENGTH_THRESHOLD;
-    }
-
-    /**
-     * Implements abstract function
-     * @return width of the triangle
-     */
-    public double getWidth() {
-        return SimpleMath.maxX(this) - SimpleMath.minX(this);
-    }
-
-    /**
-     * Implements abstract function
-     * @return height of the triangle
-     */
-    public double getHeight() {
-        return SimpleMath.maxY(this) - SimpleMath.minY(this);
     }
 }

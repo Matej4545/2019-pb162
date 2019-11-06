@@ -1,6 +1,7 @@
 package cz.muni.fi.pb162.project.geometry;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 /**
  * @author Matej Groman
@@ -64,4 +65,18 @@ public class Vertex2D {
          double partRes = Math.pow(Math.abs(vertex.getX() - this.x),2) + Math.pow(Math.abs(vertex.getY() - this.y),2);
          return Math.sqrt(partRes);
      }
+
+     @Override
+    public boolean equals(Object other) {
+         if (other == null || !(other instanceof Vertex2D)) {
+             return false;
+         }
+         Vertex2D otherV = (Vertex2D) other;
+         return otherV.getX() == this.getX() && otherV.getY() == this.getY();
+     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 }
