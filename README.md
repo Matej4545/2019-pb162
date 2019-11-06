@@ -1,82 +1,75 @@
-## Pátá iterace
+## Šestá iterace
 
-Cvičení zaměřené na práci s dědičností, rozhraním i výčtovým typem.
+Cvičení zaměřené na práci s polem, rovností, abstraktní třídou a dědičností.
 
-Mezi obrazce 2D geometrie patří [pravidelné 
-mnohoúhelníky](http://cs.wikipedia.org/wiki/Pravideln%C3%BD_mnoho%C3%BAheln%C3%ADk)
- (anglicky _regular polygons_, nebo zkráceně _n-gons_).
+V předchozích iteracích jsme pracovali s pravidelnými n-úhelníky. Nyní si systém rozšíříme o obecnější tzv. jednoduché n-úhelníky.
+To jsou obecné nepravidelné uzavřené n-úhelníky bez vzájemně se protínajících hran, jak ukazují následující příklady:
 
-![příklady pravidelných n-úhelníků](images/05a.png)
+![příklady nepravidelných n-úhelníků](images/06a.png)
 
-Jsou to pravidelné hranaté konvexní objekty, které mají všechny strany stejně dlouhé (rovnostranný trojúhelník, čtverec, pravidelný pětiúhelník, atd.).
-Lze jimi opsat kružnici, která prochází všemi vrcholy. Odpovídají tedy naší definici "kruhových objektů" definovaných rozhraním `Circular`.
-Dá se mezi ně zařadit i kružnice jakožto n-úhelník s nekonečně mnoha nekonečně malými hranami 
-(ve skutečnosti každý pravidelný n-úhelník aproximuje kružnici &mdash; čím víc hran, tím je aproximace přesnější).
+Přestože pravidelný n-úhelník je speciální případ jednoduchého n-úhelníka, v našem případě budou hierarchie tříd
+_pravidelné n-úhelníky_ a _jednoduché n-úhelníky_ oddělené. Je to z toho důvodu, že pravidelné n-úhelníky máme definovány pomocí
+poloměru opsané kružnice a počtu hran, zatímco jednoduché n-úhelníky musí být z principu definovány pomocí seznamu souřadnic
+jednotlivých vrcholů.
 
-1. V balíku `geometry` vytvořte výčtový typ `Color`, definujte několik běžných barev.
-   Přepište metodu `toString()`tak, že vrátí jméno barvy malými písmeny.
+1.  Definujte rovnost dvou vrcholů (`Vertex2D`) tak, že dva vrcholy jsou stejné, pokud mají stejné souřadnice.
 
-2. V balíku `geometry` vytvořte rozhraní `Colored` obsahující `get` a `set` metodu typu definovaného výčtového typu.
-   Metody se budou jmenovat `getColor()` a `setColor()`. Řádně je popište.
+    >   Nezapomeňte, že předefinováním rovnosti máte povinnost předefinovat ještě jednu metodu.
 
-3.  V balíku `geometry` vytvořte třídu `GeneralRegularPolygon` implementující rozhraní `RegularPolygon` a `Colored`.
-    Tato třída pak bude sloužit jako společná nadtřída pro všechny pravidelné n-úhelníky.
-    *   Pravidelný n-úhelník je definován svým _středem_, _počtem hran_ a _poloměrem opsané kružnice_.
-        Konstruktor proto bude mít právě tyto tři parametry.
-    *   Implicitní barva je černá (`BLACK`).
-    *   Délka hran se vypočítá jako:
-        ![formula](images/05b.png),
-        kde `R` je poloměr opsané kružnice a `n` je počet hran.
-    *   Šířka a výška pravidelného n-úhelníka se spočítá jako průměr opsané kružnice.
-    *   Souřadnice i-tého vrcholu se vypočítá podle následujícího vzorečku:
+2. Metody v `SimpleMath` upravte tak, aby brali jako parametr rozhraní `Polygon`.
+   Rozhraní `Polygon` definuje metody obecného n-úhelníka.
 
-        x = C<sub>x</sub> - R * cos(i * 2 * PI / n)
+3.  V balíku `geometry` vytvořte *abstraktní* třídu `SimplePolygon` implementující rozhraní `Polygon`.
+    Třída `SimplePolygon` bude obecná v tom smyslu, že nebude předjímat způsob uložení jednotlivých vrcholů (polem, kolekcí apod.).
+    To nechá až na podtřídy. Bude tedy implementovat pouze následující metody, ostatní zůstanou neimplementované:
+    *   Metoda `getHeight()` vrátí rozdíl mezi největší a nejmenší souřadnicí Y v n-úhelníku.
+        Podobně `getWidth()` pro X-ové souřadnice.
+    *   Metoda `toString()` vrátí řetězec:
 
-        y = C<sub>y</sub> - R * sin(i * 2 * PI / n)
+            "Polygon: vertices = [x, y] [x, y] [x, y]"
 
-        kde `C` je střed, `R` je poloměr kružnice, `n` je počet hran a `i` je index vrcholu.
-    *   Metoda `toString` bude vracet:
+        kde [x, y] jsou postupně všechny souřadnice vrcholů.
 
-            "<n>-gon: center=<center>, radius=<radius>, color=<color>"
+4.  Vytvořte neměnnou třídu `ArrayPolygon` rozšiřující třídu `SimplePolygon`.
+    *   Souřadnice vrcholů n-úhelníka budou uloženy ve formě pole.
+    *   Konstruktor bude mít jako vstupní argument pole vrcholů.
+        * Na začátku se ověří, jestli není pole, nebo některý jeho prvek `null`.
+          Pokud není vstupní pole validní, vyhodí výjimku `IllegalArgumentException` s vhodnou zprávou.
+        * Konstruktor si vstupní pole zkopíruje (nestačí tedy pouze uložit ukazatel na pole do atributu,
+          pak by šlo vytvořený objekt modifikovat, co nechceme).
+    *   Metoda `Vertex2D getVertex(int i)` vrátí i-tý vrchol modulo počet vrcholů.
+        V případě záporného vstupního argumentu vyhodí výjimku `IllegalArgumentException` **s popisem chyby**.
+    *   Definujte metody rovnosti. Dva `ArrayPolygony` jsou stejné, pokud jsou všechny indexy vrcholů stejné.
+		Pro porovnání tříd použijte `getClass()`, nikoliv `instanceof`. Důvod viz přednáška.
 
-        kde _\<n\>_ je počet hran, _\<center\>_ je střed a _\<radius\>_ je poloměr opsané kružnice
-        a _\<color\>_ je barva.
+        **Př.** *Následující trojúhelníky **nejsou** stejné*:
+        *   [1, 1] [2, 2] [3, 3]
+        *   [3, 3] [1, 1] [2, 2]
 
-4.  V balíku `geometry` vytvořte třídu `RegularOctagon` pro pravidelný osmiúhelník rozšiřující `GeneralRegularPolygon`.
-    Konstruktor obsahuje pouze nezbytné parametry.
+5.  Upravte třídu `Triangle` tak, aby rozšiřovala třídu `ArrayPolygon`:
+    *   Konstruktor zůstane v původní podobě, tj. bude brát tři konkrétní vrcholy jako svoje vstupní argumenty
+        a předá je konstruktoru nadtřídy v podobě pole vrcholů.
+    *   Zrušte všechny atributy a metody, které lze zdědit beze změny, kromě metody `toString()`.
 
-5.  Upravte třídu `Circle` tak, aby rozšiřovala třídu `GeneralRegularPolygon`.
-    *   Počet hran kružnice je konstanta _maximální celé číslo_ typu `int`.
-    *   Implicitní barva kružnice je červená.
-    *   Kružnice se i nadále bude dát zkonstruovat zadáním středu a poloměru.
-    *   Pročistěte třídu, tj. smažte všechny nepotřebné atributy i metody, atd.
-    *   Třída bude obsahovat původní metodu `toString`.
-    *   Zděděná metoda `getEdgeLength()` by pro kružnici nefungovala správně, protože délka hran má být 0
-         &mdash; překryjte ji.
-
-6.  Upravte třídu `Square` tak, aby rozšiřovala třídu `GeneralRegularPolygon` a pak ji pročistěte.
-    Nechte pouze konstruktory a metodu `toString`.
-    Metoda `getVertex` bude fungovat stejně jak je definováno v rozhraní.
-
-7.  Upravte třídu `Snowman`:
-    *   Sněhulák nebude složen ze čtyř opsaných kružnic, ale ze **tří** pravidelných mnohoúhelníků.
-    *   Konstruktor bude jako svůj první parametr brát parametr typu `RegularPolygon`.
-    *   Metoda `RegularPolygon[] getBalls()` bude pak vracet pole pravidelných n-úhelníků.
-    *   Mnohoúhelníky sněhuláka budou mít stejný počet hran jako spodní (první) mnohoúhelník.
-
-8. Demo vypíše pravidelný osmiúhelník se středem `[0, 0]` a poloměrem `1`.
-
-9. Draw vykreslí [dva sněhuláky z opsaných kružnic i s danými 
-   polygony](https://gitlab.fi.muni.cz/pb162/pb162-course-info/wikis/draw-images).
+6. Pokud jste implementaci provedli bez chyb, tak po spuštění třídy `Draw` se na obrazovce vykreslí [fialový trojúhelník
+   a uvnitř něj fialový polygon](https://gitlab.fi.muni.cz/pb162/pb162-course-info/wikis/draw-images)
+   (v jeho tvaru nehledejte žádný smysl :wink: ).
 
 ### Hinty
 
-- Metoda `toString()` v `enum` defaultně vrací název konstanty velkými písmeny.
-- Potřebné matematické funkce a konstanty naleznete ve třídě `java.lang.Math`.
-- Metoda `getVertex(int index)` předpokládá libovolné číslo a nevyžaduje modulo,
-  protože goniometrické funkce tak fungují automaticky.
-- Pro lepší porozumění mnohoúhelníků sněhuláka mrkněte na ukázkový screenshot _Draw_.
+- Nezapomeňte v `SimpleMath` upravit i Javadoc.
+- Pro implementaci `SimplePolygon` využijte metod ze `SimpleMath`.
+- **V abstraktní třídě explicitně napište hlavičky abstraktních metod.**
+- Využijte metody z utility třídy `Arrays`, např. _copyOf_ nebo _equals_.
+- Při kopírovaní pole stačí plytká kopie, protože objekty typu `Vertex2D` jsou neměnitelné.
+- Znak modulo je v Javě reprezentován `%`.
+- Privátní atribut = viditelný v rámci stejné třídy; nemusí to být pouze objekt `this`.
+- Pro výčet prvků pole použijte následující syntax: `new Vertex2D[] { /* elements */ }`.
+- Ve třídě `Triangle` pamatujte na kontrakt metody `equals`: metoda musí být symetrická,
+  tj. `new ArrayPolygon(...).equals(Triangle(...))` musí vrátit stejný výsledek jako
+  `Triangle(...).equals(new ArrayPolygon(...))`.
+  I kdyby byly body trojúhelníku i polygonu stejné, `equals` vrací `false`, protože jde o různé třídy.
 
 ### Cílový UML diagram tříd:
 
-![UML diagram tříd](images/05-class-diagram.jpg)
+![UML diagram tříd](images/06-class-diagram.jpg)
