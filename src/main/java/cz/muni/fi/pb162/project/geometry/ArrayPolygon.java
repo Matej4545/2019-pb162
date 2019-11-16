@@ -13,14 +13,7 @@ public class ArrayPolygon extends SimplePolygon {
      * @param input Vertex2D array of vertexes in this shape
      */
     public ArrayPolygon(Vertex2D[] input) {
-        if (input == null) {
-            throw new IllegalArgumentException("Argument should not be null");
-        }
-        for (Vertex2D vertex2D : input) {
-            if (vertex2D == null) {
-                throw new IllegalArgumentException("Argument should not be null");
-            }
-        }
+        super(input);
         vertexArray = Arrays.copyOf(input, input.length);
     }
 

@@ -1,12 +1,38 @@
 package cz.muni.fi.pb162.project.geometry;
 
 import cz.muni.fi.pb162.project.utils.SimpleMath;
+
+import java.util.Collection;
+
 /**
  * Class representing Simple polygon
  * @author Matej Groman
  */
 public abstract class SimplePolygon implements Polygon {
 
+    SimplePolygon(Vertex2D[] input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Argument should not be null");
+        }
+
+        for (Vertex2D vertex2D : input) {
+            if (vertex2D == null) {
+                throw new IllegalArgumentException("Argument should not be null");
+            }
+        }
+    }
+
+    SimplePolygon(Collection<Vertex2D> input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Argument should not be null");
+        }
+
+        for (Vertex2D vertex2D : input) {
+            if (vertex2D == null) {
+                throw new IllegalArgumentException("Argument should not be null");
+            }
+        }
+    }
     @Override
     public double getWidth() {
         return SimpleMath.maxX(this) - SimpleMath.minX(this);
