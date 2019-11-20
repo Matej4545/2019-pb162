@@ -1,65 +1,50 @@
-## Sedmá iterace
+## Osmá iterace
 
-Cvičení zaměřené na práci s kolekcemi.
+Cvičení zaměřené na práci s výjimkami a vnořenými kolekcemi.
 
-1.  Vytvořte třídu `CollectionPolygon` rozšiřující třídu `SimplePolygon`, která bude podobná třídě `ArrayPolygon`.
-    Lišit se bude pouze tím, že vrcholy n-úhelníka nebudou uloženy v poli, ale ve vhodné kolekci.
-    *   Třída bude mít stejný konstruktor jako `ArrayPolygon`, parametrem bude **pole** vrcholů.
-        Vrcholy ze vstupního pole si uloží do kolekce, prvky si zkopíruje.
-        Konstruktor taky otestuje, že samotné pole ani žádný jeho prvek není null.
-        Stejný test používá i `ArrayPolygon`.
-        Abyste se vyhnuli opakování kódu, přesuňte tuto část do konstruktoru nadtřídy.
-    *   Vytvořte i druhý konstruktor, který bere jako parametr seznam vrcholů.
-    *   Do třídy přidejte metodu `CollectionPolygon withoutLeftmostVertices()`,
-        která vráti nový polygon bez nejlevějších vrcholů (může jich být víc, viz např. obdélník).
-        Původní polygon zůstane nezměnen.
-        Jestli polygon již žádné vrcholy neobsahuje, metoda vyhodí výjimku
-        `IllegalArgumentException` s popisem chyby.
-    *   Definujte metody rovnosti.
-        Dva polygony jsou stejné, pokud jsou všechny indexy vrcholů stejné,
-        tj. mají stejné souřadnice vrcholů se stejným pořadím.
+1.  Vytvořte výjimky v balíku `cz.muni.fi.pb162.project.exception`:
+    *   `TransparentColorException` je _hlídaná_ výjimka při kreslení stejnou barvou na stejném podkladu,
+        např. bílou tužkou na bílý papír.
+    *   `EmptyDrawableException` je _hlídaná_ výjimka, kdy na kreslícím objektu není nic namalovaného.
+    *   `MissingVerticesException` reprezentuje _**nehlídanou**_ výjimku, kdy v kolekci není dostatek vrcholů.
 
-2. Vytvořte třídu `ColoredPolygon`, který vezme existující polygon a přidá mu novou vlastnost: barvu.
-    *   Konstruktor bere polygon typu `Polygon` a barvu typu `Color`.
-    *   Třída obsahuje gettery na dané atributy `getPolygon` a `getColor`.
-    *   Dva barevné polygony jsou stejné, jestli obsahují (logicky) stejnýpolygon i barvu.
+    Všechny výjimky budou mít alespoň dva konstruktory, které:
+    *   umožní nastavit **řetězec** s chybovou hláškou,
+    *   bude mít **řetězec** i **příčinu** (cause) výjimky: výjimku, která byla bezprostřední příčinou této výjimky.
 
-3.  Vytvořte třídu `Paper` implementující rozhraní `Drawable`.
-    Jde jednoduše o papír, na který se dají kreslit polygony.
-    Nakreslené polygony se budou ukládat do kolekce jako `ColoredPolygon`.
-    Když na papír nakreslíme stejný polygon (se stejnou barvou) dvakrát, uloží se jenom jednou.
-    Na papír se kreslí barvou a každý polygon je pro jednoduchost jednobarevný.
-    Implicitní barva je černá.
-    *   První konstruktor bude bez parametrů.
-    *   Další konstruktor bude brát parametr typu `Drawable` a kolekci nakreslených polygonů si zkopíruje.
-    *   `changeColor(color)` změní barvu, jakou sa bude kreslit
-    *   `drawPolygon(polygon)` namaluje polygon na papír (nastavenou barvou; jestli je bílá, nekreslí se nic)
-    *   `erasePolygon(polygon)` odstraní polygon z papíru
-    *   `eraseAll()` odstraní všechny polygony z papíru
-    *   `getAllDrawnPolygons()` vrátí všechny namalované polygony
-    *   `uniqueVerticesAmount()` vrátí počet vrcholů na papíře bez duplicit
-    *   Více informacá najdete v javadocu třídy `Drawable`.
+2. Upravte konstruktor `SimplePolygon` tak, aby vyhazoval `MissingVerticesException` když pole obsahuje méně než 3 vrcholy. 
 
-4. Spuštění třídy `Draw`
-[vykreslí barevný domeček](https://gitlab.fi.muni.cz/pb162/pb162-course-info/wikis/draw-images).
+3. Upravte `Paper` následujícím způsobem:
+    *   Metoda `eraseAll()` volána na čistém (prázdném) papíře vyhodí `EmptyDrawableException`.
+    *   Metoda `drawPolygon(polygon)` bude vyhazovat `TransparentColorException` při kreslení bílou barvou.
+        Výjimka bude obsahovat textový popis s názvem dané barvy.
+    *   `Paper` bude implementovat rozhraní `PolygonFactory`.
+    *   Metoda `Polygon tryToCreatePolygon(List<Vertex2D>)` se pokusí vytvořit polygon z kolekce vrcholů.
+        *   Pokud je vstupní argument `null`, metoda vyhodí `NullPointerException`.
+        *   Metoda si vstupní kolekci nakopíruje (nebude modifikovat původní kolekci).
+        *   Pokud při vytváření polygonu nastane chyba `IllegalArgumentException`,
+            metoda výjimku pohltí, odstraní z kolekce všechny vrcholy `null` a zkusí to znovu.
+            Metoda propouští výjimku `MissingVerticesException`.
+			*   _Pozn.: Požadované chování porušuje princip používání výjimek. Logičtější a jednodušší by bylo nejprve zkontrolovat a odebrat null vrcholy. Tím by se také předešlo zbytečnému vyhazování výjimky konstruktorem třídy CollectionPolygon. Požadované chování je pouze z důvodu procvičení práce s výjimkami._
+    *   Metoda `void tryToDrawPolygons(List<List<Vertex2D>>)` bere seznam seznamů vrcholů
+        (tj. seznam polygonů uložených zatím jako kolekce vrcholů).
+        *   Metoda se pokusí z každé kolekce vytvořit polygon (`tryToCreatePolygon`)
+            a následně ho nakreslit (`drawPolygon`).
+        *   Pokud při kreslení polygonu nastane výjimka `TransparentColorException`,
+            další polygony budou kresleny černou barvou.
+        *   Pokud během vytváření nastane výjimka `MissingVerticesException` nebo `NullPointerException`,
+            metoda výjimky zachytí a pokusí se vytvořit a namalovat další polygon.
+            Pokud se nepodařilo namalovat **žádný polygon**, vyhodí se `EmptyDrawableException`
+            s příčinou **poslední** chyby.
+    *   Přidejte metodu `Collection<Polygon> getPolygonsWithColor(Color color)`,
+        která vrátí všechny polygony s `color` barvou.
+        Můžete využít lambda streamy, konkrétně `filter`, `map`, `collect`.
+
+3. Spuštění třídy `Draw`
+[vykreslí černobílý domeček](https://gitlab.fi.muni.cz/pb162/pb162-course-info/wikis/draw-images).
 
 ### Hinty
 
-- Při výběru mezi seznamem a množinou v `CollectionPolygon` myslete na to, že topologie n-úhelníka je dána pořadím
-  vrcholů a že je povoleno mít více vrcholů se stejnými souřadnicemi
-  (u jednoduchého n-úhelníka se sice nesmí křížit hrany, mohou se ale dotýkat).
-- Proměnné by měly být typu rozhraní, tj. `List` namísto `ArrayList`, `Set` namísto `HashSet`.
-- Abstraktní třída `SimplePolygon` může mít konstruktor, nedá se však přímo instanciovat.
-- Pro konverzi pole na seznam existuje statická metoda `Arrays.asList`.
-- Pro konverzi kolekce na pole existuje metoda `toArray`, která bere jako argument nové pole.
-- Metody rovnosti kolekcí jsou definovány rozumně.
-- Getter by neměl modifikovat daný atribut, proto vracejte kolekci jako **nemodifikovatelnou**.
-  Tohle platí obecně, nejenom pro metodu `getAllDrawnPolygons()`!
-  Nemodifikovatelné kolekce vytvoří statické metody `Collections.unmodifiableXXX`.
-  Nemodifikovatelnou kolekci nemusíme vracet pouze v případě, kdy vytváříme kolekci přímo v dané metodě.
-- Metody `List.of` i `Arrays.asList` vrací nemodifikovatelnou kolekci.
-  Pro modifikaci je nutno vytvořit novou kolekci.
-
-### Cílový UML diagram tříd:
-
-![UML diagram tříd](images/07-class-diagram.jpg)
+- Hlavičky metod, které vyhazují hlídané výjimky musí obsahovat `throws`.
+- Pro metodu `tryToDrawPolygons` je vhodné použít iterátor; má metodu `hasNext`.
+ 
