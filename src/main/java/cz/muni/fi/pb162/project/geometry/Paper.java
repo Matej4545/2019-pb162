@@ -1,17 +1,22 @@
 package cz.muni.fi.pb162.project.geometry;
 
+import cz.muni.fi.pb162.project.exception.EmptyDrawableException;
+import cz.muni.fi.pb162.project.exception.MissingVerticesException;
+import cz.muni.fi.pb162.project.exception.TransparentColorException;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * Class representing draw surface
  * @author Matej Groman
  */
-public class Paper implements Drawable {
+public class Paper implements Drawable, PolygonFactory {
     private List<ColoredPolygon> polygonList;
     private Color drawingColor = Color.BLACK;
 
@@ -38,7 +43,7 @@ public class Paper implements Drawable {
     @Override
     public void drawPolygon(Polygon polygon) {
         if (drawingColor == Color.WHITE) {
-            return;
+            throw new TransparentColorException("The color is the same as paper (white).");
         }
 
         if (polygonList.contains(new ColoredPolygon(polygon, drawingColor))) {
@@ -54,6 +59,9 @@ public class Paper implements Drawable {
 
     @Override
     public void eraseAll() {
+        if (polygonList.isEmpty()) {
+            throw new EmptyDrawableException("The paper was already empty.");
+        }
         polygonList.clear();
     }
 
@@ -71,5 +79,50 @@ public class Paper implements Drawable {
             }
         }
         return uniqueVertices.size();
+    }
+
+    @Override
+    public Polygon tryToCreatePolygon(List<Vertex2D> vertices) throws MissingVerticesException {
+        if (vertices == null) {
+            throw new NullPointerException("Argument is null");
+        }
+        List<Vertex2D> myVertices = new ArrayList<>(vertices);
+
+        try {
+            return new CollectionPolygon(myVertices);
+        } catch (IllegalArgumentException e) {
+            myVertices = myVertices.stream().filter(x -> x != null).collect(Collectors.toList());
+            return new CollectionPolygon(myVertices);
+        }
+    }
+
+    @Override
+    public void tryToDrawPolygons(List<List<Vertex2D>> collectionPolygons) throws EmptyDrawableException {
+        int drawCount = 0;
+        Throwable cause = null;
+        for(List<Vertex2D> l : collectionPolygons) {
+            try {
+                drawPolygon(tryToCreatePolygon(l));
+                drawCount++;
+            } catch(TransparentColorException e) {
+                cause = e;
+                this.drawingColor = Color.BLACK;
+            } catch(MissingVerticesException|NullPointerException e) {
+                cause = e;
+            }
+        }
+        if (drawCount == 0) {
+            throw new EmptyDrawableException("",cause);
+        }
+    }
+
+    /**
+     * Function to get polygons with specified color
+     * @param color Color which we want to query
+     * @return List<Polygon> with polygons with the color
+     */
+    public Collection<Polygon> getPolygonsWithColor(Color color) {
+        return polygonList.stream().filter(x->x.getColor() == color)
+                .map(ColoredPolygon::getPolygon).collect(Collectors.toList());
     }
 }

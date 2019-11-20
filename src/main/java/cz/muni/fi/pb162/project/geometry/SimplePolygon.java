@@ -1,5 +1,6 @@
 package cz.muni.fi.pb162.project.geometry;
 
+import cz.muni.fi.pb162.project.exception.MissingVerticesException;
 import cz.muni.fi.pb162.project.utils.SimpleMath;
 
 import java.util.Collection;
@@ -15,6 +16,10 @@ public abstract class SimplePolygon implements Polygon {
             throw new IllegalArgumentException("Argument should not be null");
         }
 
+        if (input.length < 3) {
+            throw new MissingVerticesException("Less than 3 vertices");
+        }
+
         for (Vertex2D vertex2D : input) {
             if (vertex2D == null) {
                 throw new IllegalArgumentException("Argument should not be null");
@@ -25,6 +30,10 @@ public abstract class SimplePolygon implements Polygon {
     SimplePolygon(Collection<Vertex2D> input) {
         if (input == null) {
             throw new IllegalArgumentException("Argument should not be null");
+        }
+
+        if (input.size() < 3) {
+            throw new MissingVerticesException("Less than 3 vertices");
         }
 
         for (Vertex2D vertex2D : input) {
