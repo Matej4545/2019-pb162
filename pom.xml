@@ -35,10 +35,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
         </dependency>
     </dependencies>
     <build>
@@ -88,6 +87,12 @@
                         <artifactId>checkstyle</artifactId>
                         <version>${version.plugin.checkstyle}</version>
                     </dependency>
+                    <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+                    <dependency>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                        <version>2.8.5</version>
+                    </dependency>
                 </dependencies>
 	     </plugin>
             <plugin>
@@ -96,14 +101,6 @@
 		<version>2.22.1</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>9</source>
-                    <target>9</target>
                 </configuration>
             </plugin>
         </plugins>
