@@ -9,7 +9,7 @@ import java.util.Objects;
  * Class representing vertex in 2D space
  * It takes 0 params as we are not supposed to use constructor
  */
-public class Vertex2D {
+public class Vertex2D implements Comparable<Vertex2D> {
     private final double x;
     private final double y;
 
@@ -78,5 +78,11 @@ public class Vertex2D {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    @Override
+    public int compareTo(Vertex2D vertex2D) {
+         int diffX = Double.compare(this.getX(), vertex2D.getX());
+         return diffX == 0 ? Double.compare(this.getY(), vertex2D.getY()) : diffX;
     }
 }
