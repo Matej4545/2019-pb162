@@ -82,12 +82,7 @@ public class Vertex2D implements Comparable<Vertex2D> {
 
     @Override
     public int compareTo(Vertex2D vertex2D) {
-         if (this.getX() == vertex2D.getX()) {
-             if (this.getY() == vertex2D.getY()) {
-                 return 0;
-             }
-             return this.getY() > vertex2D.getY()?1:-1;
-         }
-         return this.getX() > vertex2D.getX()?1:-1;
+         int diffX = Double.compare(this.getX(), vertex2D.getX());
+         return diffX == 0 ? Double.compare(this.getY(), vertex2D.getY()) : diffX;
     }
 }

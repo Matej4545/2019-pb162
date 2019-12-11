@@ -11,12 +11,6 @@ import java.util.Comparator;
 public class VertexInverseComparator implements Comparator<Vertex2D> {
     @Override
     public int compare(Vertex2D vertex2D, Vertex2D t1) {
-        if (vertex2D.getX() == t1.getX()) {
-            if (vertex2D.getY() == t1.getY()) {
-                return 0;
-            }
-            return vertex2D.getY() < t1.getY()?1:-1;
-        }
-        return vertex2D.getX() < t1.getX()?1:-1;
+        return t1.compareTo(vertex2D);
     }
 }
