@@ -30,4 +30,10 @@ public interface PolygonReadable {
      * @throws IOException on read error
      */
     PolygonReadable read(File file) throws IOException;
+
+    /**
+     * Method for building this object
+     * @return new labeled polygon
+     */
+    LabeledPolygon build();
 }

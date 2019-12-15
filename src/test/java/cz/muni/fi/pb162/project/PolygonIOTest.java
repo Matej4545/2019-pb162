@@ -108,7 +108,7 @@ public class PolygonIOTest {
         // when
         LabeledPolygon polygon = builder.read(new FileInputStream(POLYGON_OK_TXT)).build();
         // then
-        assertThat(polygon.getSortedVertices()).containsExactly(
+        assertThat(polygon.getSortedVertices()).containsExactlyInAnyOrder(
                 new Vertex2D(-100, 0),
                 new Vertex2D(-100, 200),
                 new Vertex2D(0, -100),
@@ -123,7 +123,7 @@ public class PolygonIOTest {
         LabeledPolygon polygon = builder.read(new FileInputStream(POLYGON_OK_TXT)).build();
         // then
         assertThat(polygon.getSortedVertices())
-                .containsExactly(
+                .containsExactlyInAnyOrder(
                         new Vertex2D(-100, 0),
                         new Vertex2D(-100, 200),
                         new Vertex2D(0, -100),
